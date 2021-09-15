@@ -10,10 +10,16 @@ import (
 func TestFizzBuzz(t *testing.T) {
 	req := fizzbuzz.NewRequest(3, 5, "fizz", "buzz", 16)
 	res := fizzbuzz.FizzBuzz(req)
-	answer := "1,2,fizz,4,buzz,fizz,7,8,fizz,buzz,11,fizz,13,14,fizzbuzz,16"
-	if res != answer {
-		t.Logf("Output mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
+	answer := []string{"1", "2", "fizz", "4", "buzz", "fizz", "7", "8", "fizz", "buzz", "11", "fizz", "13", "14", "fizzbuzz", "16"}
+	if len(answer) != len(res) {
+		t.Logf("Output length mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
 		t.Fail()
+	}
+	for i := range answer {
+		if answer[i] != res[i] {
+			t.Logf("Output mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
+			t.Fail()
+		}
 	}
 }
 
@@ -24,20 +30,32 @@ func TestFizzBuzzWithStats(t *testing.T) {
 		t.Log(err)
 		t.Fail()
 	}
-	answer := "1,2,fizz,4,buzz,fizz,7,8,fizz,buzz,11,fizz,13,14,fizzbuzz,16"
-	if res != answer {
-		t.Logf("Output mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
+	answer := []string{"1", "2", "fizz", "4", "buzz", "fizz", "7", "8", "fizz", "buzz", "11", "fizz", "13", "14", "fizzbuzz", "16"}
+	if len(answer) != len(res) {
+		t.Logf("Output length mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
 		t.Fail()
+	}
+	for i := range answer {
+		if answer[i] != res[i] {
+			t.Logf("Output mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
+			t.Fail()
+		}
 	}
 }
 
 func TestFizzBuzzDuplicate(t *testing.T) {
 	req := fizzbuzz.NewRequest(3, 5, "fizz", "fizz", 16)
 	res := fizzbuzz.FizzBuzz(req)
-	answer := "1,2,fizz,4,fizz,fizz,7,8,fizz,fizz,11,fizz,13,14,fizzfizz,16"
-	if res != answer {
-		t.Logf("Output mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
+	answer := []string{"1", "2", "fizz", "4", "fizz", "fizz", "7", "8", "fizz", "fizz", "11", "fizz", "13", "14", "fizzfizz", "16"}
+	if len(answer) != len(res) {
+		t.Logf("Output length mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
 		t.Fail()
+	}
+	for i := range answer {
+		if answer[i] != res[i] {
+			t.Logf("Output mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
+			t.Fail()
+		}
 	}
 }
 
@@ -48,10 +66,16 @@ func TestFizzBuzzDuplicateWithStats(t *testing.T) {
 		t.Log(err)
 		t.Fail()
 	}
-	answer := "1,2,fizz,4,fizz,fizz,7,8,fizz,fizz,11,fizz,13,14,fizzfizz,16"
-	if res != answer {
-		t.Logf("Output mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
+	answer := []string{"1", "2", "fizz", "4", "fizz", "fizz", "7", "8", "fizz", "fizz", "11", "fizz", "13", "14", "fizzfizz", "16"}
+	if len(answer) != len(res) {
+		t.Logf("Output length mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
 		t.Fail()
+	}
+	for i := range answer {
+		if answer[i] != res[i] {
+			t.Logf("Output mismatch\nExpected:\n%s\nGot:\n%s\n", answer, res)
+			t.Fail()
+		}
 	}
 }
 
@@ -122,7 +146,7 @@ func BenchmarkFizzBuzzGetMostRequested(b *testing.B) {
 	}
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
-		_, _, err := fizzbuzz.GetMostRequested()
+		_, err := fizzbuzz.GetMostRequested()
 		if err != nil {
 			b.Log(err)
 			b.Fail()

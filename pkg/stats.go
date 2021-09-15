@@ -1,15 +1,43 @@
 package pkg
 
 import (
+	"encoding/json"
 	"sync"
 )
+
+// StatCount is the StatCounter response
+type StatCount struct {
+	Request Request
+	Hits    uint
+}
+
+// MarshalJSON is used to satisfy the json.Marshaler interface
+func (statCount StatCount) MarshalJSON() ([]byte, error) {
+	js, err := statCount.Request.JSON()
+	if err != nil {
+		return nil, err
+	}
+	reqJson := json.RawMessage(js)
+	res := struct {
+		Request *json.RawMessage `json:"request"`
+		Hits    uint             `json:"hits"`
+	}{
+		Request: &reqJson,
+		Hits:    statCount.Hits,
+	}
+	b, err := json.MarshalIndent(&res, "", "\t")
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}
 
 // StatCounter is an interface describing what a counter should look like
 type StatCounter interface {
 	// Add a "hit" to a given request
 	Add(req Request) error
 	// GetMostRequested will return the request who had the most "hits"
-	GetMostRequested() (req Request, hits uint, err error)
+	GetMostRequested() (statCount StatCount, err error)
 }
 
 type statCounter struct {
@@ -30,24 +58,28 @@ func (stat *statCounter) Add(r Request) error {
 }
 
 // GetMostRequested will return the most requested fizzbuzz combination
-func (stat *statCounter) GetMostRequested() (req Request, hits uint, err error) {
-	var r request
+func (stat *statCounter) GetMostRequested() (statCount StatCount, err error) {
+	var (
+		r   request
+		req Request
+	)
 	stat.RLock()
 	defer stat.RUnlock()
 	for key, hitNum := range stat.m {
-		if hitNum > hits {
+		if hitNum > statCount.Hits {
 			req, err = r.FromKey([]byte(key))
 			if err != nil {
 				return
 			}
-			hits = hitNum
+			statCount.Request = req
+			statCount.Hits = hitNum
 		}
 	}
 	return
 }
 
 // GetMostRequested will return the most requested fizzbuzz combination
-func GetMostRequested() (req Request, hits uint, err error) {
+func GetMostRequested() (statCount StatCount, err error) {
 	return counter.GetMostRequested()
 }
 

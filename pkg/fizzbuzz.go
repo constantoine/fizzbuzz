@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"strconv"
-	"strings"
 )
 
 // NewRequest will create a fizzbuzz request according to given parameters
@@ -18,19 +17,16 @@ func NewRequest(fizzNumber, buzzNumber int, fizzString, BuzzString string, limit
 
 // FizzBuzzWithStats is an alias to FizzBuzz
 // Will register hits in the global counter
-func FizzBuzzWithStats(r Request) (string, error) {
+func FizzBuzzWithStats(r Request) ([]string, error) {
 	if err := counter.Add(r); err != nil {
-		return "", err
+		return nil, err
 	}
 	return FizzBuzz(r), nil
 }
 
-// FizzBuzz will generate the requested string
-func FizzBuzz(r Request) string {
-	str := new(strings.Builder)
-	// Start with a big enough allocation to avoid
-	// Lots of small rellocations, especially at the beggining of the loop
-	str.Grow(r.Limit() * 2)
+// FizzBuzz will generate the requested list of strings
+func FizzBuzz(r Request) []string {
+	str := make([]string, r.Limit())
 	fizzbuz := r.FizzNumber() * r.BuzzNumber()
 	// Precompute fizzBuzzStr to avoid appending strings at each fizzbuzz
 	// Saves one reallocation and one memmove. Slower will small limit
@@ -39,17 +35,14 @@ func FizzBuzz(r Request) string {
 	for i := 1; i <= r.Limit(); i++ {
 		switch {
 		case i%fizzbuz == 0:
-			str.WriteString(fizzBuzzStr)
+			str[i-1] = fizzBuzzStr
 		case i%r.FizzNumber() == 0:
-			str.WriteString(r.FizzString())
+			str[i-1] = r.FizzString()
 		case i%r.BuzzNumber() == 0:
-			str.WriteString(r.BuzzString())
+			str[i-1] = r.BuzzString()
 		default:
-			str.WriteString(strconv.Itoa(i))
-		}
-		if i < r.Limit() {
-			str.WriteRune(',')
+			str[i-1] = strconv.Itoa(i)
 		}
 	}
-	return str.String()
+	return str
 }
