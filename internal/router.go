@@ -9,23 +9,23 @@ import (
 )
 
 func RouteFizzBuzz(w http.ResponseWriter, r *http.Request) {
-	fizzNum, err := strconv.Atoi(r.Form.Get("int1"))
+	fizzNum, err := strconv.Atoi(r.FormValue("int1"))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	buzzNum, err := strconv.Atoi(r.Form.Get("int2"))
+	buzzNum, err := strconv.Atoi(r.FormValue("int2"))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	limit, err := strconv.Atoi(r.Form.Get("limit"))
+	limit, err := strconv.Atoi(r.FormValue("limit"))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	fizzStr := r.Form.Get("str1")
-	buzzStr := r.Form.Get("str2")
+	fizzStr := r.FormValue("str1")
+	buzzStr := r.FormValue("str2")
 	req := pkg.NewRequest(fizzNum, buzzNum, fizzStr, buzzStr, limit)
 	res, err := pkg.FizzBuzzWithStats(req)
 	if err != nil {
