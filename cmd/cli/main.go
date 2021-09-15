@@ -11,7 +11,10 @@ import (
 
 func main() {
 	if len(os.Args) != 6 {
-		panic("5 arguments are needed. int1, int2, limit, str1, str2")
+		panic(`5 arguments are needed. int1, int2, limit, str1, str2
+all multiples of int1 are replaced by str1
+all multiples of int2 are replaced by str2
+all multiples of int1 and int2 are replaced by str1str2`)
 	}
 	fizzNum, err := strconv.Atoi(os.Args[1])
 	if err != nil {
