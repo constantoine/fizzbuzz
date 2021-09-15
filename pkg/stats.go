@@ -75,6 +75,9 @@ func (stat *statCounter) GetMostRequested() (statCount StatCount, err error) {
 			statCount.Hits = hitNum
 		}
 	}
+	if statCount.Request == nil {
+		statCount.Request = r
+	}
 	return
 }
 
