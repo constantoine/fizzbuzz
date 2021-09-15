@@ -18,10 +18,11 @@ Bonus: add a statistics endpoint allowing users to know what the most frequent r
 - Accept no parameter
 - Return the parameters corresponding to the most used request, as well as the number of hits for this request
 ## Rendu
+Le rendu ne contient aucune dépendance externe. Le module n'utilise que la librairie standard afin de permettre une plus grande extensibilité à l'aide des interfaces standards
 ### `/pkg`
 `/pkg` contient la core library du module, ainsi que la définition des interfaces à utiliser pour intéragir avec cette library
 - StatCounter est une interface qui définit deux méthodes, `Add()` et `GetMostRequested()`
-La librairie utilise par défaut un compteur basé une une map et un mutex. Le compteur peut-être remplacé par n'importe quelle structure remplissant les conditions de l'interface avec `pkg.SetStatCounter()`
+La librairie utilise par défaut un compteur basé sur une map et un `Sync.RWMutex`. Le compteur peut-être remplacé par n'importe quelle structure remplissant les conditions de l'interface avec `pkg.SetStatCounter()`
 - Request est une interface qui va définir une requête. La librairie possède deux fonctions, `FizzBuzz()` pour une requête standalone, et `FizzBuzzWithStats()` pour une requête qui s'enregistre dans le StatCounter, qui prennent en argument une requête. Il est possible d'en générer une avec `NewRequest()` 
 ### `/cmd/cli`
 Dans `/cmd/cli`, un programme standalone permet de tester la logique. Il s'invoque comme ceci:
@@ -34,3 +35,6 @@ Dans `/cmd/server` se trouve le serveur du webservice. Il se lance comme ceci:
 ```
 > ./server --port=8080
 ```
+Il n'utilise que la librairie standard `net/http`, son port est configurable à l'aide du packet standard `flag`
+### `/internal`
+`/internal` contient les routes à utiliser par `/cmd/server`. Il utilise le package `log` par defaut de go pour log les erreurs, et ne repose que sur le packet `net/http`
