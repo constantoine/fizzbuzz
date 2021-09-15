@@ -1,3 +1,4 @@
+// package server contains a webservice using core fizzbuzz library
 package main
 
 import (

@@ -1,3 +1,4 @@
+// package cli contains a standalone CLI client for the core fizzbuzz library
 package main
 
 import (
