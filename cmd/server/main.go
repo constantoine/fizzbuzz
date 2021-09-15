@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/constantoine/fizzbuzz/internal"
 )
@@ -16,5 +17,12 @@ func main() {
 
 	http.HandleFunc("/fizz", internal.RouteFizzBuzz)
 	http.HandleFunc("/stats", internal.RouteStats)
-	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	srv := &http.Server{
+		Addr:              fmt.Sprintf(":%d", port),
+		ReadTimeout:       1 * time.Second,
+		WriteTimeout:      5 * time.Second,
+		IdleTimeout:       30 * time.Second,
+		ReadHeaderTimeout: 2 * time.Second,
+	}
+	srv.ListenAndServe()
 }
