@@ -36,5 +36,44 @@ Dans `/cmd/server` se trouve le serveur du webservice. Il se lance comme ceci:
 > ./server --port=8080
 ```
 Il n'utilise que la librairie standard `net/http`, son port est configurable à l'aide du packet standard `flag`
+Il contient deux routes:
+- `/fizz`, qui prennent les arguments demandés par le sujet en paramètre URL. FizzBuzz étant idempotent, c'est une méthode GET. Elle peut être utilisée comme ceci:
+
+`> curl "localhost:8080/fizz?int1=3&int2=5&limit=16&str1=fizz&str2=fuzz"`
+```JSON
+[
+        "1",
+        "2",
+        "fizz",
+        "4",
+        "buzz",
+        "fizz",
+        "7",
+        "8",
+        "fizz",
+        "buzz",
+        "11",
+        "fizz",
+        "13",
+        "14",
+        "fizzbuzz",
+        "16"
+]
+```
+- `/stats`, qui ne prend aucun paramètre et s'utilise comme ceci:
+
+`> curl "localhost:8080/stats"`
+```JSON
+{
+	"request": {
+			"int1": 3,
+			"int2": 5,
+			"str1": "fizz",
+			"str2": "buzz",
+			"limit": 15
+	},
+	"hits": 2
+}
+``` 
 ### `/internal`
 `/internal` contient les routes à utiliser par `/cmd/server`. Il utilise le package `log` par defaut de go pour log les erreurs, et ne repose que sur le packet `net/http`
