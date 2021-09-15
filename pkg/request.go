@@ -16,11 +16,11 @@ type Request interface {
 }
 
 type request struct {
-	FizzNum int
-	BuzzNum int
-	FizzStr string
-	BuzzStr string
-	Lim     int
+	FizzNum int    `json:"int1"`
+	BuzzNum int    `json:"int2"`
+	FizzStr string `json:"str1"`
+	BuzzStr string `json:"str2"`
+	Lim     int    `json:"limit"`
 }
 
 // Key is an alias for the JSON method

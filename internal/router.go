@@ -8,6 +8,11 @@ import (
 	"github.com/constantoine/fizzbuzz/pkg"
 )
 
+// RouteFizzBuzz is a GET route that accepts 5 parameters
+// three integers int1, int2 and limit, and two strings str1 and str2
+// all multiples of int1 are replaced by str1
+// all multiples of int2 are replaced by str2
+// all multiples of int1 and int2 are replaced by str1str2
 func RouteFizzBuzz(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
@@ -45,6 +50,18 @@ func RouteFizzBuzz(w http.ResponseWriter, r *http.Request) {
 	enc.Encode(res)
 }
 
+// RouteStats is a GET route that will return the parameters or the most popular request
+// Response will look like
+//	{
+//		"request": {
+//				"int1": 3,
+//				"int2": 5,
+//				"str1": "fizz",
+//				"str2": "buzz",
+//				"limit": 15
+//		},
+//		"hits": 2
+//	}
 func RouteStats(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
