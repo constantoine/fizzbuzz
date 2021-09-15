@@ -9,6 +9,10 @@ import (
 )
 
 func RouteFizzBuzz(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return
+	}
 	fizzNum, err := strconv.Atoi(r.FormValue("int1"))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
@@ -21,6 +25,10 @@ func RouteFizzBuzz(w http.ResponseWriter, r *http.Request) {
 	}
 	limit, err := strconv.Atoi(r.FormValue("limit"))
 	if err != nil {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	if fizzNum < 1 || buzzNum < 1 || limit < 1 {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -38,6 +46,10 @@ func RouteFizzBuzz(w http.ResponseWriter, r *http.Request) {
 }
 
 func RouteStats(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return
+	}
 	res, err := pkg.GetMostRequested()
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
