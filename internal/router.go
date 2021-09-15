@@ -55,6 +55,7 @@ func RouteFizzBuzz(w http.ResponseWriter, r *http.Request) {
 	req := pkg.NewRequest(fizzNum, buzzNum, fizzStr, buzzStr, limit)
 	res, err := pkg.FizzBuzzWithStats(req)
 	if err != nil {
+		log.Printf("Error registering stats: %s", err.Error())
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -82,6 +83,7 @@ func RouteStats(w http.ResponseWriter, r *http.Request) {
 	}
 	res, err := pkg.GetMostRequested()
 	if err != nil {
+		log.Printf("Error retrieving stats: %s", err.Error())
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
