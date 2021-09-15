@@ -2,39 +2,52 @@ package internal
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/constantoine/fizzbuzz/pkg"
 )
 
+func writeErr(w http.ResponseWriter, status int, text string) {
+	http.Error(w, text, status)
+	log.Printf("Error %d: %s", status, text)
+}
+
 // RouteFizzBuzz is a GET route that accepts 5 parameters
-// three greater than 1 integers int1, int2 and limit, and two strings str1 and str2
+// three strictly positive integers int1, int2 and limit, and two strings str1 and str2
 // all multiples of int1 are replaced by str1
 // all multiples of int2 are replaced by str2
 // all multiples of int1 and int2 are replaced by str1str2
 func RouteFizzBuzz(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		writeErr(w, http.StatusMethodNotAllowed, http.StatusText(http.StatusMethodNotAllowed))
 		return
 	}
 	fizzNum, err := strconv.Atoi(r.FormValue("int1"))
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		writeErr(w, http.StatusBadRequest, fmt.Sprintf("int1 (%s) could not be formatted into an int", r.FormValue("int1")))
 		return
 	}
 	buzzNum, err := strconv.Atoi(r.FormValue("int2"))
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		writeErr(w, http.StatusBadRequest, fmt.Sprintf("int2 (%s) could not be formatted into an int", r.FormValue("int2")))
 		return
 	}
 	limit, err := strconv.Atoi(r.FormValue("limit"))
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		writeErr(w, http.StatusBadRequest, fmt.Sprintf("limit (%s) could not be formatted into an int", r.FormValue("limit")))
 		return
 	}
-	if fizzNum < 1 || buzzNum < 1 || limit < 1 {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+	if fizzNum < 1 {
+		writeErr(w, http.StatusBadRequest, fmt.Sprintf("int1 (%d) must be strictly positive", fizzNum))
+		return
+	} else if buzzNum < 1 {
+		writeErr(w, http.StatusBadRequest, fmt.Sprintf("int2 (%d) must be strictly positive", buzzNum))
+		return
+	} else if limit < 1 {
+		writeErr(w, http.StatusBadRequest, fmt.Sprintf("limit (%d) must be strictly positive", limit))
 		return
 	}
 	fizzStr := r.FormValue("str1")
