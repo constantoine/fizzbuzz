@@ -9,7 +9,7 @@ import (
 )
 
 // RouteFizzBuzz is a GET route that accepts 5 parameters
-// three integers int1, int2 and limit, and two strings str1 and str2
+// three greater than 1 integers int1, int2 and limit, and two strings str1 and str2
 // all multiples of int1 are replaced by str1
 // all multiples of int2 are replaced by str2
 // all multiples of int1 and int2 are replaced by str1str2
